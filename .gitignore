@@ -1,0 +1,10 @@
+#don't version libs or build artifacts
+libs/
+out/
+
+#intellij stuff
+.idea
+*.iml
+
+#Auth Config Stuff
+src/com/lnotes/twitterscotus/auth/authconfig.xml
