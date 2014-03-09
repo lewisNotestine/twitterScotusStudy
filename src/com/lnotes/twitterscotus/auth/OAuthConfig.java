@@ -69,6 +69,7 @@ public class OAuthConfig {
     public Twitter getConfiguredTwitterAPI() {
         final ConfigurationBuilder builder = new ConfigurationBuilder();
         builder.setDebugEnabled(true)
+                .setClientVersion("1.1")
                 .setOAuthConsumerKey(mOAuthConsumerKey)
                 .setOAuthConsumerSecret(mOAuthConsumerSecret)
                 .setOAuthAccessToken(mOAuthAccessToken)
@@ -92,14 +93,11 @@ public class OAuthConfig {
 
             return builder.parse(file);
         } catch (SAXException saxEx) {
-            //TODO
-            System.out.println(saxEx.getStackTrace());
+            saxEx.printStackTrace();
         } catch (ParserConfigurationException pcEx){
-            //TODO
-            System.out.println(pcEx.getStackTrace());
+            pcEx.printStackTrace();
         } catch (IOException ioEx) {
-            //TODO
-            System.out.println(ioEx.getStackTrace());
+            ioEx.printStackTrace();
         }
 
         //TODO: don't return null
@@ -121,7 +119,7 @@ public class OAuthConfig {
         Node el = document.getDocumentElement().getElementsByTagName(searchName).item(0);
         assert(el != null);
 
-        final String nodeValue = el.getFirstChild().toString();
+        final String nodeValue = el.getFirstChild().getTextContent();
         assert(nodeValue != null);
 
         return nodeValue;
