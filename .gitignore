@@ -8,3 +8,9 @@ out/
 
 #Auth Config Stuff
 src/com/lnotes/twitterscotus/auth/authconfig.xml
+
+#ANT build stuff, etc
+module_twitterscotusstudy.xml
+src/META-INF/
+twitterscotusstudy.properties
+twitterscotusstudy.xml
