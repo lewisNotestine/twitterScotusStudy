@@ -1,7 +1,6 @@
 package com.lnotes.twitterscotus.auth;
 
 
-import com.sun.tools.javac.util.Assert;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -16,6 +15,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.util.Scanner;
 
 /**
  * Responsible for doing Twitter OAuth stuff...
@@ -42,12 +42,12 @@ public class OAuthConfig {
     private final String mOAuthAccessToken;
     private final String mOAuthAccessTokenSecret;
 
-    public OAuthConfig() {
-        final Document xmlDocument = loadConfigFromXML();
+    public OAuthConfig(String configFilePath) {
+        final Document xmlDocument = loadConfigFromXML(configFilePath);
         xmlDocument.getDocumentElement().normalize();
 
         mOAuthConsumerKey = parseXMLNodeById(xmlDocument, NODE_CONSUMER_KEY);
-        Assert.checkNonNull(mOAuthConsumerKey);
+        //Assert.checkNonNull(mOAuthConsumerKey);
         assert(!mOAuthConsumerKey.isEmpty());
 
         mOAuthConsumerSecret = parseXMLNodeById(xmlDocument, NODE_CONSUMER_SECRET);
@@ -75,19 +75,25 @@ public class OAuthConfig {
                 .setOAuthAccessToken(mOAuthAccessToken)
                 .setOAuthAccessTokenSecret(mOAuthAccessTokenSecret);
 
-        final TwitterFactory factory = new TwitterFactory(builder.build());
-        return factory.getInstance();
+        return new TwitterFactory(builder.build()).getInstance();
     }
 
 
     /**
      * Load the Config elements from an XML file so that we don't have to hardcode our auth credentials.
-     * //TODO: clean this up and doc for xml document schema etc.
      */
-    private Document loadConfigFromXML() {
+    private Document loadConfigFromXML(String filePath) {
         try {
-            final File file = new File(mAppPath + mXmlFilePath);
-            assert(file.exists() && file.canRead());
+            File file = new File(filePath);
+            if (!file.exists()) {
+                System.out.println("OAuthConfig Doesn't Exist! Input new file.");
+                Scanner scanner = new Scanner(System.in);
+                while(scanner.hasNextLine()) {
+                    System.out.println(scanner.nextLine());
+                }
+
+            }
+
             DocumentBuilderFactory bf = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = bf.newDocumentBuilder();
 

@@ -1,29 +1,30 @@
 package com.lnotes.twitterscotus;
 
 import com.lnotes.twitterscotus.auth.OAuthConfig;
-import twitter4j.Query;
-import twitter4j.QueryResult;
+import com.lnotes.twitterscotus.streaming.StreamingListenerController;
+import com.lnotes.twitterscotus.streaming.StreamingListenerControllerBuilder;
 import twitter4j.Twitter;
-import twitter4j.Status;
-import twitter4j.TwitterException;
 
 public class TwitterScotusStudy {
 
-    public static void main(String ... args) {
-        try {
-
-            final OAuthConfig config = new OAuthConfig();
+    public static void main(String... args) {
+        if (args.length == 3) {
+            final OAuthConfig config = new OAuthConfig(args[0]);
             final Twitter twitter = config.getConfiguredTwitterAPI();
+            final StreamingListenerController listenerController = new StreamingListenerControllerBuilder()
+                    .setConfiguration(twitter.getConfiguration())
+                    .setAuthorization(twitter.getAuthorization())
+                    .get();
 
-            final Query query = new Query("#TimAndEric");
+            final String dataFileOutput = args[1];
+            final String errorFileOutput = args[2];
 
-            final QueryResult result = twitter.search(query);
-            for (Status status : result.getTweets()) {
-                System.out.println("@" + status.getUser().getScreenName() + ":" + status.getText());
-            }
-        } catch (TwitterException twEx) {
-            twEx.printStackTrace();
+            System.out.println("Writing data to: " + dataFileOutput);
+
+            listenerController.listenForRandomSample(dataFileOutput, errorFileOutput);
+
+        } else {
+            System.out.println("USAGE: TwitterScotusStudy.jar configFile.xml dataLogFile.Out errorLogFile.out");
         }
-
     }
 }
