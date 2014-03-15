@@ -1,14 +1,11 @@
 package com.lnotes.twitterscotus.auth;
 
 
-import com.sun.tools.javac.util.Assert;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
-import twitter4j.auth.Authorization;
-import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
 import org.w3c.dom.Document;
@@ -84,7 +81,6 @@ public class OAuthConfig {
 
     /**
      * Load the Config elements from an XML file so that we don't have to hardcode our auth credentials.
-     * //TODO: clean this up and doc for xml document schema etc.
      */
     private Document loadConfigFromXML(String filePath) {
         try {
@@ -98,10 +94,8 @@ public class OAuthConfig {
 
             }
 
-
             DocumentBuilderFactory bf = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = bf.newDocumentBuilder();
-
 
             return builder.parse(file);
         } catch (SAXException saxEx) {

@@ -18,6 +18,9 @@ public class TwitterScotusStudy {
 
             final String dataFileOutput = args[1];
             final String errorFileOutput = args[2];
+
+            System.out.println("Writing data to: " + dataFileOutput);
+
             listenerController.listenForRandomSample(dataFileOutput, errorFileOutput);
 
         } else {

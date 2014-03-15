@@ -1,5 +1,7 @@
 package com.lnotes.twitterscotus.streaming;
 
+import twitter4j.FilterQuery;
+import twitter4j.StatusListener;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
 import twitter4j.auth.Authorization;
@@ -15,6 +17,11 @@ import twitter4j.conf.Configuration;
 public class StreamingListenerController {
 
     private TwitterStream mTwitterStream;
+    private StatusListener mStatusListener;
+
+    //TODO These are for testing. need to set up API for easily manipulating maybe.
+    private static final String[] ENGLISH = { "'en'" };
+    private static final String[] KEYWORDS = { "the" };
 
 
     /**
@@ -29,11 +36,23 @@ public class StreamingListenerController {
      * Direct the {@link twitter4j.TwitterStream} to listen for a Random sample of Tweets.
      */
     public void listenForRandomSample(final String dataFilePath, final String errorFilePath) {
-        //TODO implement.
+        if (mStatusListener == null) {
+            mStatusListener = new ScotusStreamingListener(dataFilePath, errorFilePath);
+        }
 
-        mTwitterStream.addListener(new ScotusStreamingListener(dataFilePath, errorFilePath));
-
+        mTwitterStream.addListener(mStatusListener);
         mTwitterStream.sample();
+    }
+
+
+    public void listenForEnglishTweets(final String dataFilePath, final String errorFilePath) {
+        if (mStatusListener == null) {
+            mStatusListener = new ScotusStreamingListener(dataFilePath, errorFilePath);
+        }
+
+
+        mTwitterStream.addListener(mStatusListener);
+        mTwitterStream.filter(new FilterQuery().language(ENGLISH).track(KEYWORDS));
     }
 
     /**
@@ -42,14 +61,6 @@ public class StreamingListenerController {
      */
     public void listenForHashTag(final String... hashTags) {
         //TODO implement.
-
-    }
-
-    /**
-     * sets the path for the output file.
-     */
-    public void setLogFilePath(final String filePath) {
-
     }
 
     /**
